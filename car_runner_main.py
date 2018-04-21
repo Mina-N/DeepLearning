@@ -25,15 +25,15 @@ import sys
 # SETTINGS
 
 # to start training from scratch:
-#load_checkpoint = False
-#checkpoint_path = "data/checkpoint02"
-#train_episodes = float("inf")
+load_checkpoint = False
+checkpoint_path = "data/checkpoint03"
+train_episodes = float("inf")
 save_freq_episodes = 400
 
 # To play from existing checkpoint without any training:
-load_checkpoint = True
-checkpoint_path = "data/checkpoint02"
-train_episodes = 0 #or just give higher value to train the existing checkpoint more
+#load_checkpoint = True
+#checkpoint_path = "data/checkpoint02"
+#train_episodes = 0 #or just give higher value to train the existing checkpoint more
 
 model_config = dict(
     min_epsilon=0.1,
@@ -90,6 +90,16 @@ def one_episode():
     reward, frames = dqn_agent.play_episode()
     print("episode: %d, reward: %f, length: %d, total steps: %d" %
           (dqn_agent.episode_counter, reward, frames, dqn_agent.global_counter))
+
+    if (dqn_agent.do_training == True):
+        f = open("training_data.txt", "a")
+        f.write("%d %f %d %d \n" % (dqn_agent.episode_counter, reward, frames, dqn_agent.global_counter))
+        f.close()
+    else:
+        f = open("test_data.txt", "a")
+        f.write("%d %f %d %d \n" % (dqn_agent.episode_counter, reward, frames, dqn_agent.global_counter))
+        f.close()
+
 
     save_cond = (
         dqn_agent.episode_counter % save_freq_episodes == 0
